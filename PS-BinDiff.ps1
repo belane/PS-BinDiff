@@ -1,19 +1,34 @@
-﻿## ORIGINAL BINARY
+## ARGUMENTS
+param (
+    [string]$OriginalFile,
+    [string]$PatchedFile
+ )
+
+## ORIGINAL BINARY
 [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
 $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog;
-$OpenFileDialog.ShowDialog() | Out-Null
-if(!$OpenFileDialog.filename) { break; }
+if(!$OriginalFile -or !(Test-Path $OriginalFile)) {
+    $OpenFileDialog.ShowDialog() | Out-Null
+    if(!$OpenFileDialog.filename) { break; }
+    $OriginalFile = $OpenFileDialog.filename;
+    }
 
 ## FILE DETAILS
-$original = [System.IO.File]::ReadAllBytes($OpenFileDialog.filename);
-$name = Split-Path -Path $OpenFileDialog.filename -Leaf;
+$OriginalFile = Resolve-Path $OriginalFile;
+$original = [System.IO.File]::ReadAllBytes($OriginalFile);
+$name = Split-Path -Path $OriginalFile -Leaf;
 $md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider;
-$hash = [System.BitConverter]::ToString($md5.ComputeHash([System.IO.File]::ReadAllBytes($OpenFileDialog.filename)));
+$hash = [System.BitConverter]::ToString($md5.ComputeHash([System.IO.File]::ReadAllBytes($OriginalFile)));
 
 ## MODIFIED BINARY
-$OpenFileDialog.ShowDialog() | Out-Null
-if(!$OpenFileDialog.filename) { break; }
-$patched = [System.IO.File]::ReadAllBytes($OpenFileDialog.filename);
+if(!$PatchedFile -or !(Test-Path $PatchedFile)) {
+    $OpenFileDialog.filename = "";
+    $OpenFileDialog.ShowDialog() | Out-Null
+    if(!$OpenFileDialog.filename) { break; }
+    $PatchedFile = $OpenFileDialog.filename;
+    }
+$PatchedFile = Resolve-Path $PatchedFile;
+$patched = [System.IO.File]::ReadAllBytes($PatchedFile);
 
 ## DIFFERENCES
 $changes = @();
