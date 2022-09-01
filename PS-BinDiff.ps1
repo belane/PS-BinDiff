@@ -65,6 +65,7 @@ for ($byte=0; $byte -le $original.Length; $byte++) {
     }
 }
 Write-Output "------------------------`nFound $($changes.Length) changes`n"
+if ($changes.Length -eq 0) { break }
 
 ## GENERATE PATCH
 Write-Output "Generating patch...`n"
