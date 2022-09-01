@@ -14,7 +14,7 @@ if(!$OriginalFile -or !(Test-Path $OriginalFile)) {
     }
 
 ## FILE DETAILS
-$OriginalFile = Resolve-Path $OriginalFile;
+$OriginalFile = (Resolve-Path $OriginalFile).ProviderPath;
 $original = [System.IO.File]::ReadAllBytes($OriginalFile);
 $name = Split-Path -Path $OriginalFile -Leaf;
 $md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider;
@@ -27,7 +27,7 @@ if(!$PatchedFile -or !(Test-Path $PatchedFile)) {
     if(!$OpenFileDialog.filename) { break; }
     $PatchedFile = $OpenFileDialog.filename;
     }
-$PatchedFile = Resolve-Path $PatchedFile;
+$PatchedFile = (Resolve-Path $PatchedFile).ProviderPath;
 $patched = [System.IO.File]::ReadAllBytes($PatchedFile);
 
 ## DIFFERENCES
