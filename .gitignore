@@ -18,6 +18,6 @@
 *.exe
 *.dll
 *.bin
-
+*_PATCH.ps1
 .profile.ps1
 .DS_Store
