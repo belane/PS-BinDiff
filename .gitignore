@@ -19,5 +19,6 @@
 *.dll
 *.bin
 *_PATCH.ps1
+*.bak
 .profile.ps1
 .DS_Store
